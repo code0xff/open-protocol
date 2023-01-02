@@ -35,14 +35,20 @@ export class Wasm implements ITask {
     const code = await state.get(Buffer.from(address, 'hex'))
     const module = await WebAssembly.instantiate(code, {
       env: {
-        log: console.log
+        log_str: (offset: number, len: number) => {
+          const {buffer} = module.instance.exports.memory as WebAssembly.Memory
+          const bytes = new Uint8Array(Buffer.from(buffer, offset, len))
+          const text = new TextDecoder('utf8').decode(bytes)
+          console.log(text)
+        },
+        log_i32: (i: number) => {
+          console.log(i)
+        },
       }
     })
-    if (params) {
-      const _params = new Uint8Array(Buffer.from(params, 'hex'));
-      (module.instance.exports[method] as any)(_params)
-    } else {
-      (module.instance.exports[method] as any)()
-    }
+    const bytes = new Uint8Array(Buffer.from(params, 'hex'))
+    const buffer = new Uint8Array((module.instance.exports.memory as WebAssembly.Memory).buffer)
+    buffer.subarray().set(bytes)
+    ;(module.instance.exports[method] as any)(buffer, bytes.length)
   }
 }
