@@ -1,6 +1,6 @@
 import { MemoryLevel } from 'memory-level'
 
-const ENCODING_OPTS = { keyEncoding: 'buffer', valueEncoding: 'buffer' }
+const ENCODING_OPTS = {keyEncoding: 'buffer', valueEncoding: 'buffer'}
 
 export class LevelDB {
   _leveldb
@@ -29,11 +29,11 @@ export class LevelDB {
     await this._leveldb.del(key, ENCODING_OPTS)
   }
 
-  async batch(opStack) {
+  batch = async (opStack) => {
     await this._leveldb.batch(opStack, ENCODING_OPTS)
   }
 
-  copy() {
+  copy = () => {
     return new LevelDB(this._leveldb)
   }
 }
