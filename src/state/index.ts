@@ -3,7 +3,7 @@ import { Level } from 'level';
 import { ITask, TaskManager } from '../task';
 import { LevelDB } from './level';
 
-export class State implements ITask {
+export class StateTask implements ITask {
   manager: TaskManager
   trie: Trie
 

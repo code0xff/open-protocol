@@ -9,9 +9,9 @@ import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string'
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { PeerId } from '@libp2p/interface-peer-id'
-import { RPC } from '../rpc'
+import { RPCTask } from '../rpc'
 
-export class Network implements ITask {
+export class NetworkTask implements ITask {
   node: Libp2p
   peerId: PeerId
   manager: TaskManager
@@ -61,7 +61,7 @@ export class Network implements ITask {
     const topic = 'consensus'
     this.node.pubsub.subscribe(topic)
 
-    const rpc = this.manager.get<RPC>('rpc')
+    const rpc = this.manager.get<RPCTask>('rpc')
     rpc.addMethod('publish', ((messages: any[]) => {
       const message = messages[0] ? messages[0] : ''
       this.node.pubsub.publish(topic, uint8ArrayFromString(message))

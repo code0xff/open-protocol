@@ -1,23 +1,39 @@
 import { Command } from 'commander'
 import fs, { readFileSync } from 'fs'
-import { RPC } from '../rpc'
-import { Network } from '../network'
+import { RPCTask } from '../rpc'
+import { NetworkTask } from '../network'
 import { TaskManager } from '../task'
 import { createEd25519PeerId } from '@libp2p/peer-id-factory'
 import env from 'dotenv'
-import { ed25519PairFromRandom } from '@polkadot/util-crypto'
-import { Wasm } from '../wasm'
-import { State } from '../state'
+import { WasmTask } from '../wasm'
+import { StateTask } from '../state'
+import { KeypairTask } from '../keypair'
 
 env.config()
 
 const program = new Command()
 program.command('wallet')
   .action(async () => {
-    const keypair = ed25519PairFromRandom()
-    const privateKey = Buffer.from(keypair.secretKey).toString('hex')
-    const publicKey = Buffer.from(keypair.publicKey).toString('hex')
+    const {privateKey, publicKey} = await new KeypairTask().new()
     fs.writeFileSync(`wallet-${new Date().getTime()}.json`, JSON.stringify({privateKey, publicKey}, null, '\t'))
+  })
+  
+program.command('sign')
+  .requiredOption('-f, --file-path <file>', 'wallet file path')
+  .requiredOption('-m, --message <message>', 'hex encoded message')
+  .action(async (options) => {
+    const loaded = fs.readFileSync(options.filePath, 'utf8')
+    const wallet = JSON.parse(loaded)
+    if (wallet.privateKey) {
+      const privateKey = Buffer.from(wallet.privateKey, 'hex')
+      const mesasge = Buffer.from(options.message, 'hex')
+      const keypair = new KeypairTask()
+      const signature = (await keypair.sign(privateKey, mesasge)).toString('hex')
+      console.log(signature)
+      fs.writeFileSync(`signature-${new Date().getTime()}.txt`, signature)
+    } else {
+      console.error('invalid wallet format!')
+    }
   })
 
 program.command('peerkey')
@@ -33,10 +49,10 @@ program.command('peerkey')
 program.command('node')
   .action(async () => {
     const manager = new TaskManager()
-    manager.add(new RPC())
-    manager.add(new State())
-    manager.add(new Network())
-    manager.add(new Wasm())
+    manager.add(new RPCTask())
+    manager.add(new StateTask())
+    manager.add(new NetworkTask())
+    manager.add(new WasmTask())
 
     await manager.initialize()
     await manager.start()
