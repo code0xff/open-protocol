@@ -66,7 +66,7 @@ program.command('wasm')
   .action((options) => {
     const path = options.filePath
     const buffer = readFileSync(path)
-    const compiled = buffer.toString('hex')
+    const compiled = buffer.toString('base64')
     fs.writeFileSync(`contract-${new Date().getTime()}.txt`, compiled)
   })
 
