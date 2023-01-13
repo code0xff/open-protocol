@@ -2,7 +2,7 @@ import Fastify, { FastifyInstance } from 'fastify'
 import { JSONRPCServer, JSONRPCRequest, SimpleJSONRPCMethod } from 'json-rpc-2.0'
 import { ITask, TaskManager } from '../task'
 
-export class RPCTask implements ITask {
+export class RpcTask implements ITask {
   fastify: FastifyInstance
   server: JSONRPCServer
   manager: TaskManager

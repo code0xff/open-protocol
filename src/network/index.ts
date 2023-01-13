@@ -9,17 +9,21 @@ import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string'
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { PeerId } from '@libp2p/interface-peer-id'
-import { RPCTask } from '../rpc'
+import { RpcTask } from '../rpc'
+import { TxPoolTask } from '../txpool'
+import { encode, decode } from '../codec'
 
 export class NetworkTask implements ITask {
   node: Libp2p
   peerId: PeerId
   manager: TaskManager
+  topic: string
 
   name = () => 'network'
 
   init = async (manager: TaskManager): Promise<void> => {
     this.manager = manager
+    this.topic = 'openprotocol'
 
     const privateKey = Uint8Array.from(Buffer.from(process.env.PEER_PRIVATE, 'hex'))
     const publicKey = Uint8Array.from(Buffer.from(process.env.PEER_PUBLIC, 'hex'))
@@ -58,17 +62,17 @@ export class NetworkTask implements ITask {
       }
     }
 
-    const topic = 'consensus'
-    this.node.pubsub.subscribe(topic)
-
-    const rpc = this.manager.get<RPCTask>('rpc')
-    rpc.addMethod('publish', ((messages: any[]) => {
-      const message = messages[0] ? messages[0] : ''
-      this.node.pubsub.publish(topic, uint8ArrayFromString(message))
-    }))
-
+    this.node.pubsub.subscribe(this.topic)
     this.node.pubsub.addEventListener('message', (evt) => {
-      console.log(`received: ${uint8ArrayToString(evt.detail.data)}`)
+      const { data } = evt.detail
+      const type = data[0]
+      if (type === 0) {
+        const tx = decode(Buffer.from(data.slice(1)))
+        const txpool = this.manager.get<TxPoolTask>('txpool')
+        txpool.add(tx)
+      } else {
+        console.error('unknown type!')
+      }
     })
 
     this.node.connectionManager.addEventListener('peer:connect', (evt) => {
@@ -83,5 +87,9 @@ export class NetworkTask implements ITask {
   stop = async (): Promise<void> => {
     await this.node.stop()
     console.log('libp2p has stopped')
+  }
+
+  publish = async (type: Buffer, tx: Buffer): Promise<void> => {
+    await this.node.pubsub.publish(this.topic, Buffer.concat([type, tx]))
   }
 }

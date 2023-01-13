@@ -18,7 +18,9 @@ export class KeypairTask implements ITask {
 
   start = async (): Promise<void> => { }
 
-  stop = async (): Promise<void> => { }
+  stop = async (): Promise<void> => { 
+    console.log('keypair has stopped')
+  }
 
   new = async (): Promise<Keypair> => {
     const privateKey = ed.utils.randomPrivateKey()
@@ -33,5 +35,9 @@ export class KeypairTask implements ITask {
     const sha256ed = crypto.createHash('sha256').update(message).digest()
     const signature = await ed.sign(sha256ed, privateKey)
     return Buffer.from(signature)
+  }
+
+  verify = async (signature: Buffer, message: Buffer, publicKey: Buffer): Promise<boolean> => {
+    return ed.verify(signature, message, publicKey)
   }
 }
