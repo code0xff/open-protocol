@@ -25,6 +25,7 @@ export class ApiTask implements ITask {
 
   start = async (): Promise<void> => {
     const rpc = this.manager.get<RpcTask>('rpc')
+
     rpc.addMethod('transfer', async (params: string[]) => {
       const tx = params.map(param => Buffer.from(param, 'hex'))
       if (!await this.verify(tx)) {
@@ -35,11 +36,13 @@ export class ApiTask implements ITask {
       console.log(`hash=${hash.toString('hex')} has added`)
       const network = this.manager.get<NetworkTask>('network')
       
-      network.publish(Buffer.from([0]), encode(tx))
+      await network.publish(Buffer.from([0]), encode(tx))
     })
   }
 
-  stop = async (): Promise<void> => { }
+  stop = async (): Promise<void> => { 
+    console.log('api has stopped')
+  }
 
   verify = async (tx: Buffer[]): Promise<boolean> => {
     const message = encode(tx.slice(0, 5))

@@ -20,7 +20,8 @@ export class TxPoolTask implements ITask {
   }
 
   add = (tx: Buffer[]) => {
-    const hash = crypto.createHash('sha256').update(encode(tx.slice(0, 5))).digest()
+    const message = encode(tx.slice(0, 5))
+    const hash = crypto.createHash('sha256').update(message).digest()
     if (!this.ready.has(hash)) {
       this.ready.set(hash, tx)
     }

@@ -39,8 +39,7 @@ export class WasmTask implements ITask {
       env: {
         log_str: (offset: number, len: number) => {
           const { buffer } = module.instance.exports.memory as WebAssembly.Memory
-          const bytes = new Uint8Array(Buffer.from(buffer, offset, len))
-          const text = new TextDecoder('utf8').decode(bytes)
+          const text = new TextDecoder('utf8').decode(Buffer.from(buffer, offset, len))
           console.log(text)
         },
         log_i32: (i: number) => {
@@ -48,7 +47,7 @@ export class WasmTask implements ITask {
         },
       }
     })
-    const bytes = new Uint8Array(Buffer.from(params, 'hex'))
+    const bytes = Buffer.from(params, 'hex')
     const buffer = new Uint8Array((module.instance.exports.memory as WebAssembly.Memory).buffer)
     buffer.subarray().set(bytes)
       ; (module.instance.exports[method] as any)(buffer, bytes.length)

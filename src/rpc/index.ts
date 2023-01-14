@@ -20,11 +20,11 @@ export class RpcTask implements ITask {
     })
 
     this.fastify.post('/jsonrpc', async (request, reply) => {
-      const _request = request.body as JSONRPCRequest
-      const _response = await this.server.receive(_request)
+      const jsonrpcRequest = request.body as JSONRPCRequest
+      const jsonrpcResponse = await this.server.receive(jsonrpcRequest)
 
-      if (_response) {
-        reply.send(_response)
+      if (jsonrpcResponse) {
+        reply.send(jsonrpcResponse)
       } else {
         reply.status(204)
         reply.send()
