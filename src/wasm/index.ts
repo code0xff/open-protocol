@@ -23,8 +23,8 @@ export class WasmTask implements ITask {
     })
   }
 
-  stop = async (): Promise<void> => { 
-    console.log('wasm has stopped') 
+  stop = async (): Promise<void> => {
+    console.log('wasm has stopped')
   }
 
   create = async (address: string, code: string) => {
@@ -48,8 +48,8 @@ export class WasmTask implements ITask {
       }
     })
     const bytes = Buffer.from(params, 'hex')
-    const buffer = new Uint8Array((module.instance.exports.memory as WebAssembly.Memory).buffer)
-    buffer.subarray().set(bytes)
-      ; (module.instance.exports[method] as any)(buffer, bytes.length)
+    const buffer = (module.instance.exports.memory as WebAssembly.Memory).buffer
+    new Uint8Array(buffer).subarray().set(bytes);
+    (module.instance.exports[method] as any)(buffer, bytes.length)
   }
 }
