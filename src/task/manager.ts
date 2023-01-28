@@ -1,4 +1,4 @@
-import { ITask } from "./task"
+import { ITask } from './task.js'
 
 export class TaskManager {
   tasks: Map<string, ITask>

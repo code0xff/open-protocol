@@ -2,13 +2,13 @@ import { createLibp2p, Libp2p } from 'libp2p'
 import { tcp } from '@libp2p/tcp'
 import { noise } from '@chainsafe/libp2p-noise'
 import { mplex } from '@libp2p/mplex'
-import { ITask, TaskManager } from '../task'
+import { ITask, TaskManager } from '../task/index.js'
 import { peerIdFromKeys } from '@libp2p/peer-id'
 import { multiaddr } from '@multiformats/multiaddr'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { PeerId } from '@libp2p/interface-peer-id'
-import { TxPoolTask } from '../txpool'
-import { decode } from '../codec'
+import { TxPoolTask } from '../txpool/index.js'
+import { decode } from '../codec/index.js'
 
 export class NetworkTask implements ITask {
   node: Libp2p
@@ -66,7 +66,7 @@ export class NetworkTask implements ITask {
       if (type === 0) {
         const tx = decode(Buffer.from(data.slice(1)))
         const txpool = this.manager.get<TxPoolTask>('txpool')
-        txpool.add(tx)
+        txpool.push(tx)
       } else {
         console.error('unknown type!')
       }

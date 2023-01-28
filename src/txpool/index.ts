@@ -1,5 +1,5 @@
-import { encode } from '../codec'
-import { ITask, TaskManager } from '../task'
+import { encode } from '../codec/index.js'
+import { ITask, TaskManager } from '../task/index.js'
 import crypto from 'crypto'
 
 export class TxPoolTask implements ITask {
@@ -19,7 +19,7 @@ export class TxPoolTask implements ITask {
     console.log('txpool has stopped')
   }
 
-  add = (tx: Buffer[]) => {
+  push = (tx: Buffer[]) => {
     const message = encode(tx.slice(0, 5))
     const hash = crypto.createHash('sha256').update(message).digest()
     if (!this.ready.has(hash)) {

@@ -1,4 +1,4 @@
-import { TaskManager } from "./manager";
+import { TaskManager } from './manager.js'
 
 export interface ITask {
   name: () => string,

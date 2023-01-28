@@ -1,5 +1,5 @@
-import { ITask } from './task'
-import { TaskManager } from './manager'
+import { ITask } from './task.js'
+import { TaskManager } from './manager.js'
 
 export {
   ITask,

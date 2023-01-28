@@ -1,4 +1,4 @@
-import { ITask, TaskManager } from '../task'
+import { ITask, TaskManager } from '../task/index.js'
 
 export class ConsensusTask implements ITask {
   manager: TaskManager

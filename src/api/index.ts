@@ -1,10 +1,10 @@
-import { encode } from '../codec'
-import { KeypairTask } from '../keypair'
-import { RpcTask } from '../rpc'
-import { ITask, TaskManager } from '../task'
+import { encode } from '../codec/index.js'
+import { KeypairTask } from '../keypair/index.js'
+import { RpcTask } from '../rpc/index.js'
+import { ITask, TaskManager } from '../task/index.js'
 import crypto from 'crypto'
-import { TxPoolTask } from '../txpool'
-import { NetworkTask } from '../network'
+import { TxPoolTask } from '../txpool/index.js'
+import { NetworkTask } from '../network/index.js'
 
 export class ApiTask implements ITask {
   manager: TaskManager
@@ -32,7 +32,7 @@ export class ApiTask implements ITask {
         throw new Error('invalid tx!')
       }
       const txpool = this.manager.get<TxPoolTask>('txpool')
-      const hash = txpool.add(tx)
+      const hash = txpool.push(tx)
       console.log(`hash=${hash.toString('hex')} has added`)
       const network = this.manager.get<NetworkTask>('network')
       

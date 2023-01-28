@@ -1,7 +1,7 @@
-import { Trie } from '@ethereumjs/trie';
-import { Level } from 'level';
-import { ITask, TaskManager } from '../task';
-import { LevelDB } from './level';
+import { Trie } from '@ethereumjs/trie'
+import { Level } from 'level'
+import { ITask, TaskManager } from '../task/index.js'
+import { LevelDB } from './level.js'
 
 export class StateTask implements ITask {
   manager: TaskManager
