@@ -1,11 +1,7 @@
 import * as ed from '@noble/ed25519'
 import { ITask, TaskManager } from '../task/index.js'
 import crypto from 'crypto'
-
-interface Keypair {
-  privateKey: string,
-  publicKey: string,
-}
+import { Keypair } from '../type/index.js'
 
 export class KeypairTask implements ITask {
   manager: TaskManager
@@ -18,7 +14,7 @@ export class KeypairTask implements ITask {
 
   start = async (): Promise<void> => { }
 
-  stop = async (): Promise<void> => { 
+  stop = async (): Promise<void> => {
     console.log('keypair has stopped')
   }
 

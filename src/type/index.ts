@@ -2,6 +2,11 @@ import { encode, decode, encodeHexString, encodeNumber } from '../codec/index.js
 import crypto from 'crypto'
 import { KeypairTask } from '../keypair/index.js'
 
+export interface Keypair {
+  privateKey: string,
+  publicKey: string,
+}
+
 interface IUnsignedTransaction {
   from: string
   to: string
