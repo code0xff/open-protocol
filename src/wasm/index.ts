@@ -29,7 +29,7 @@ export class WasmTask implements ITask {
 
   create = async (address: string, code: string) => {
     const db = this.manager.get<StateTask>('state')
-    await db.put(Buffer.from(address, 'hex'), Buffer.from(code, 'base64'))
+    await db.put(Buffer.from(address, 'hex'), Buffer.from(code, 'base64url'))
   }
 
   call = async (address: string, method: string, params: string) => {
