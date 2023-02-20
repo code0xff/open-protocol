@@ -11,14 +11,14 @@ import { KeypairTask } from '../keypair/index.js'
 import { TxPoolTask } from '../txpool/index.js'
 import { ApiTask } from '../api/index.js'
 import { ConsensusTask } from '../consensus/index.js'
-import { UnsignedTransaction } from '../type/index.js'
+import { UnsignedTransaction } from '../types/index.js'
 
 env.config()
 
 const program = new Command()
 program.command('wallet')
   .action(async () => {
-    const { privateKey, publicKey } = await new KeypairTask().new()
+    const { privateKey, publicKey } = await KeypairTask.new()
     const wallet = { privateKey, publicKey }
     console.log(wallet)
     fs.writeFileSync(`wallet-${new Date().getTime()}.json`, JSON.stringify(wallet, null, '\t'))
@@ -33,8 +33,7 @@ program.command('sign')
     if (wallet.privateKey) {
       const privateKey = Buffer.from(wallet.privateKey, 'hex')
       const mesasge = Buffer.from(options.message, 'hex')
-      const keypair = new KeypairTask()
-      const signature = (await keypair.sign(privateKey, mesasge)).toString('hex')
+      const signature = (await KeypairTask.sign(privateKey, mesasge)).toString('hex')
       console.log(signature)
       fs.writeFileSync(`signature-${new Date().getTime()}.txt`, signature)
     } else {

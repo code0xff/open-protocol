@@ -1,9 +1,8 @@
-import { KeypairTask } from '../keypair/index.js'
 import { RpcTask } from '../rpc/index.js'
 import { ITask, TaskManager } from '../task/index.js'
 import { TxPoolTask } from '../txpool/index.js'
 import { NetworkTask } from '../network/index.js'
-import { SignedTransaction } from '../type/index.js'
+import { SignedTransaction } from '../types/index.js'
 
 export class ApiTask implements ITask {
   manager: TaskManager
@@ -19,8 +18,7 @@ export class ApiTask implements ITask {
 
     rpc.addMethod('transact', async (params: string[]) => {
       const tx = SignedTransaction.fromBuffer(Buffer.from(params[0], 'hex'))
-      const keypair = this.manager.get<KeypairTask>('keypair');
-      if (!await tx.verify(keypair)) {
+      if (!await tx.verify()) {
         throw new Error('invalid tx!')
       }
       const txpool = this.manager.get<TxPoolTask>('txpool')

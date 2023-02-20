@@ -10,16 +10,12 @@ const encodeNumber = (num: number): Buffer => {
 
 const encode = (buffers: Buffer[]): Buffer =>
   Buffer.concat(buffers.map(buffer => {
-    return encodeToSizedBuffer(buffer)
+    const u32a = new Uint32Array(1)
+    u32a[0] = buffer.length
+    const u8a = new Uint8Array(u32a.buffer)
+    return Buffer.concat([u8a, buffer])
   })
 )
-
-const encodeToSizedBuffer = (buffer: Buffer): Buffer => {
-  const u32a = new Uint32Array(1)
-  u32a[0] = buffer.length
-  const u8a = new Uint8Array(u32a.buffer)
-  return Buffer.concat([u8a, buffer])
-}
 
 const decode = (buffer: Buffer): Buffer[] => {
   let index = 0

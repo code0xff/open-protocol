@@ -8,7 +8,7 @@ import { multiaddr } from '@multiformats/multiaddr'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { PeerId } from '@libp2p/interface-peer-id'
 import { TxPoolTask } from '../txpool/index.js'
-import { SignedTransaction } from '../type/index.js'
+import { SignedTransaction } from '../types/index.js'
 
 export class NetworkTask implements ITask {
   node: Libp2p
@@ -88,7 +88,7 @@ export class NetworkTask implements ITask {
     console.log('libp2p has stopped')
   }
 
-  publish = async (type: Buffer, tx: Buffer): Promise<void> => {
+  public publish = async (type: Buffer, tx: Buffer): Promise<void> => {
     await this.node.pubsub.publish(this.topic, Buffer.concat([type, tx]))
   }
 }

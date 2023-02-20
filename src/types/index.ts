@@ -2,11 +2,6 @@ import { encode, decode, encodeHexString, encodeNumber } from '../codec/index.js
 import crypto from 'crypto'
 import { KeypairTask } from '../keypair/index.js'
 
-export interface Keypair {
-  privateKey: string,
-  publicKey: string,
-}
-
 interface IUnsignedTransaction {
   from: string
   to: string
@@ -68,7 +63,7 @@ interface ISignedTransaction {
 
   toBuffer: () => Buffer
   toHash: () => Buffer
-  verify: (keypair: KeypairTask) => Promise<boolean>
+  verify: () => Promise<boolean>
 }
 
 export class SignedTransaction implements ISignedTransaction {
@@ -113,8 +108,8 @@ export class SignedTransaction implements ISignedTransaction {
     return crypto.createHash('sha256').update(this.toBuffer()).digest()
   }
 
-  public verify = async (keypair: KeypairTask): Promise<boolean> => {
+  public verify = async (): Promise<boolean> => {
     const hash = this.toHash()
-    return await keypair.verify(Buffer.from(this.signature, 'hex'), hash, Buffer.from(this.from, 'hex'))
+    return await KeypairTask.verify(Buffer.from(this.signature, 'hex'), hash, Buffer.from(this.from, 'hex'))
   }
 }
