@@ -1,10 +1,9 @@
-import { encode } from '../codec/index.js'
 import { KeypairTask } from '../keypair/index.js'
 import { RpcTask } from '../rpc/index.js'
 import { ITask, TaskManager } from '../task/index.js'
-import crypto from 'crypto'
 import { TxPoolTask } from '../txpool/index.js'
 import { NetworkTask } from '../network/index.js'
+import { SignedTransaction } from '../type/index.js'
 
 export class ApiTask implements ITask {
   manager: TaskManager
@@ -15,39 +14,27 @@ export class ApiTask implements ITask {
     this.manager = manager
   }
 
-  // transaction
-  // params[0] = from
-  // params[1] = to
-  // params[2] = value
-  // params[3] = nonce
-  // params[4] = input
-  // params[5] = signature
-
   start = async (): Promise<void> => {
     const rpc = this.manager.get<RpcTask>('rpc')
 
-    rpc.addMethod('transfer', async (params: string[]) => {
-      const tx = params.map(param => Buffer.from(param, 'hex'))
-      if (!await this.verify(tx)) {
+    rpc.addMethod('transact', async (params: string[]) => {
+      const tx = SignedTransaction.fromBuffer(Buffer.from(params[0], 'hex'))
+      const keypair = this.manager.get<KeypairTask>('keypair');
+      if (!await tx.verify(keypair)) {
         throw new Error('invalid tx!')
       }
       const txpool = this.manager.get<TxPoolTask>('txpool')
-      const hash = txpool.push(tx)
-      console.log(`hash=${hash.toString('hex')} has added`)
-      const network = this.manager.get<NetworkTask>('network')
-      
-      await network.publish(Buffer.from([0]), encode(tx))
+      const res = txpool.push(tx)
+      if (res) {
+        console.log(`hash=${tx.toHash().toString('hex')} has added`)
+        const network = this.manager.get<NetworkTask>('network')
+        
+        await network.publish(Buffer.from([0]), tx.toBuffer())
+      }
     })
   }
 
   stop = async (): Promise<void> => { 
     console.log('api has stopped')
-  }
-
-  verify = async (tx: Buffer[]): Promise<boolean> => {
-    const message = encode(tx.slice(0, 5))
-    const sha256ed = crypto.createHash('sha256').update(message).digest()
-    const keypair = this.manager.get<KeypairTask>('keypair')
-    return keypair.verify(tx[5], sha256ed, tx[0])
   }
 }

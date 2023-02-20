@@ -11,6 +11,7 @@ import { KeypairTask } from '../keypair/index.js'
 import { TxPoolTask } from '../txpool/index.js'
 import { ApiTask } from '../api/index.js'
 import { ConsensusTask } from '../consensus/index.js'
+import { UnsignedTransaction } from '../type/index.js'
 
 env.config()
 
@@ -69,12 +70,25 @@ program.command('node')
   })
 
 program.command('wasm')
-  .option('-f, --file-path <file>', 'file path')
+  .requiredOption('-f, --file-path <file>', 'file path')
   .action((options) => {
     const path = options.filePath
     const buffer = readFileSync(path)
     const compiled = buffer.toString('base64url')
     fs.writeFileSync(`contract-${new Date().getTime()}.txt`, compiled)
   })
+
+program.command('encode')
+.requiredOption('-t, --transaction <transaction>', 'encode transaction')
+.action(async (options) => {
+  try {
+    const tx = UnsignedTransaction.fromJson(options.transaction)
+    const transaction = { hash: tx.toHash().toString('hex'), data: tx.toBuffer().toString('hex') }
+    console.log(transaction)
+    fs.writeFileSync(`transaction-${new Date().getTime()}.txt`, JSON.stringify(transaction, null, '\t'))
+  } catch (e: any) {
+    console.error(e.message)
+  }
+})
 
 program.parse(process.argv)

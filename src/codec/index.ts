@@ -1,10 +1,25 @@
+const encodeHexString = (str: string): Buffer => {
+  return Buffer.from(str, 'hex')
+}
+
+const encodeNumber = (num: number): Buffer => {
+  const u32a = new Uint32Array(1)
+  u32a[0] = num
+  return Buffer.from(new Uint8Array(u32a.buffer))
+}
+
 const encode = (buffers: Buffer[]): Buffer =>
   Buffer.concat(buffers.map(buffer => {
-    const u32a = new Uint32Array(1)
-    u32a[0] = buffer.length
-    const u8a = new Uint8Array(u32a.buffer)
-    return Buffer.concat([u8a, buffer])
-  }))
+    return encodeToSizedBuffer(buffer)
+  })
+)
+
+const encodeToSizedBuffer = (buffer: Buffer): Buffer => {
+  const u32a = new Uint32Array(1)
+  u32a[0] = buffer.length
+  const u8a = new Uint8Array(u32a.buffer)
+  return Buffer.concat([u8a, buffer])
+}
 
 const decode = (buffer: Buffer): Buffer[] => {
   let index = 0
@@ -19,6 +34,8 @@ const decode = (buffer: Buffer): Buffer[] => {
 }
 
 export {
+  encodeHexString,
+  encodeNumber,
   encode,
   decode,
 }

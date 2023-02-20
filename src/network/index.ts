@@ -8,7 +8,7 @@ import { multiaddr } from '@multiformats/multiaddr'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { PeerId } from '@libp2p/interface-peer-id'
 import { TxPoolTask } from '../txpool/index.js'
-import { decode } from '../codec/index.js'
+import { SignedTransaction } from '../type/index.js'
 
 export class NetworkTask implements ITask {
   node: Libp2p
@@ -64,9 +64,11 @@ export class NetworkTask implements ITask {
       const { data } = evt.detail
       const type = data[0]
       if (type === 0) {
-        const tx = decode(Buffer.from(data.slice(1)))
+        const tx = SignedTransaction.fromBuffer(Buffer.from(data.slice(1)))
         const txpool = this.manager.get<TxPoolTask>('txpool')
-        txpool.push(tx)
+        if (txpool.push(tx)) {
+          console.debug('already added tx!')
+        }
       } else {
         console.error('unknown type!')
       }
