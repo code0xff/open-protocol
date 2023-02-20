@@ -66,7 +66,8 @@ export class NetworkTask implements ITask {
       if (type === 0) {
         const tx = SignedTransaction.fromBuffer(Buffer.from(data.slice(1)))
         const txpool = this.manager.get<TxPoolTask>('txpool')
-        if (txpool.push(tx)) {
+        const res = txpool.push(tx)
+        if (!res) {
           console.debug('already added tx!')
         }
       } else {
