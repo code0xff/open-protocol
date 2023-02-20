@@ -24,8 +24,7 @@ export class ApiTask implements ITask {
         throw new Error('invalid tx!')
       }
       const txpool = this.manager.get<TxPoolTask>('txpool')
-      const res = txpool.push(tx)
-      if (res) {
+      if (txpool.push(tx)) {
         console.log(`hash=${tx.toHash().toString('hex')} has added`)
         const network = this.manager.get<NetworkTask>('network')
         
