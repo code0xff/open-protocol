@@ -19,7 +19,9 @@ const program = new Command()
 program.command('wallet')
   .action(async () => {
     const { privateKey, publicKey } = await new KeypairTask().new()
-    fs.writeFileSync(`wallet-${new Date().getTime()}.json`, JSON.stringify({ privateKey, publicKey }, null, '\t'))
+    const wallet = { privateKey, publicKey }
+    console.log(wallet)
+    fs.writeFileSync(`wallet-${new Date().getTime()}.json`, JSON.stringify(wallet, null, '\t'))
   })
 
 program.command('sign')
