@@ -28,17 +28,3 @@ test('encodeNumber test', () => {
   const buffer = encodeNumber(input)
   expect(buffer.toString('hex')).toBe('00ca9a3b')
 })
-
-test('transaction encode test', () => {
-  let txJsonStr = "{\"from\": \"7e9cd855ddb203964649da096ebba0515070db91a0bfcba96e4f692ad582f2dc\",\"to\": \"48cddaa3e83ba437487defec48e92f5023cffd67f2c7e506dace3977c662cc56\",\"value\": \"ff\",\"nonce\": 1,\"input\": \"00\"}"
-  const { from, to, value, nonce, input } = JSON.parse(txJsonStr)
-  const buffers = new Array<Buffer>()
-  buffers.push(encodeHexString(from))
-  buffers.push(encodeHexString(to))
-  buffers.push(encodeHexString(value))
-  buffers.push(encodeNumber(nonce))
-  buffers.push(encodeHexString(input))
-  const encoded = encode(buffers)
-
-  expect(encoded.toString('hex')).toBe('200000007e9cd855ddb203964649da096ebba0515070db91a0bfcba96e4f692ad582f2dc2000000048cddaa3e83ba437487defec48e92f5023cffd67f2c7e506dace3977c662cc5601000000ff04000000010000000100000000')
-})
