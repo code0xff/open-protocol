@@ -1,6 +1,6 @@
 import { encode, decode, encodeHexString, encodeNumber } from '../codec'
 import crypto from 'crypto'
-import { KeypairTask } from '../keypair'
+import { Keypair } from '../keypair'
 
 interface IUnsignedTransaction {
   from: string
@@ -110,6 +110,6 @@ export class SignedTransaction implements ISignedTransaction {
 
   public verify = async (): Promise<boolean> => {
     const hash = this.toHash()
-    return await KeypairTask.verify(Buffer.from(this.signature, 'hex'), hash, Buffer.from(this.from, 'hex'))
+    return await Keypair.verify(Buffer.from(this.signature, 'hex'), hash, Buffer.from(this.from, 'hex'))
   }
 }

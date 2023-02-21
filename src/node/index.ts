@@ -7,7 +7,7 @@ import { createEd25519PeerId } from '@libp2p/peer-id-factory'
 import env from 'dotenv'
 import { WasmTask } from '../wasm'
 import { StateTask } from '../state'
-import { KeypairTask } from '../keypair'
+import { Keypair } from '../keypair'
 import { TxPoolTask } from '../txpool'
 import { ApiTask } from '../api'
 import { ConsensusTask } from '../consensus'
@@ -18,7 +18,7 @@ env.config()
 const program = new Command()
 program.command('wallet')
   .action(async () => {
-    const { privateKey, publicKey } = await KeypairTask.new()
+    const { privateKey, publicKey } = await Keypair.new()
     const wallet = { privateKey, publicKey }
     console.log(wallet)
     fs.writeFileSync(`wallet-${new Date().getTime()}.json`, JSON.stringify(wallet, null, '\t'))
@@ -33,7 +33,7 @@ program.command('sign')
     if (wallet.privateKey) {
       const privateKey = Buffer.from(wallet.privateKey, 'hex')
       const mesasge = Buffer.from(options.message, 'hex')
-      const signature = (await KeypairTask.sign(privateKey, mesasge)).toString('hex')
+      const signature = (await Keypair.sign(privateKey, mesasge)).toString('hex')
       console.log(signature)
       fs.writeFileSync(`signature-${new Date().getTime()}.txt`, signature)
     } else {
@@ -54,7 +54,6 @@ program.command('peerkey')
 program.command('node')
   .action(async () => {
     const manager = new TaskManager()
-    manager.add(new KeypairTask())
     manager.add(new TxPoolTask())
     manager.add(new RpcTask())
     manager.add(new StateTask())

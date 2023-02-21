@@ -1,26 +1,13 @@
-import * as ed from '@noble/ed25519'
-import { ITask, TaskManager } from '../task'
 import crypto from 'crypto'
+import * as ed from '@noble/ed25519'
 
-export interface Keypair {
+interface IKeypair {
   privateKey: string,
   publicKey: string,
 }
 
-export class KeypairTask implements ITask {
-  manager: TaskManager
-
-  name = () => 'keypair'
-
-  init = async (manager: TaskManager): Promise<void> => {
-    this.manager = manager
-  }
-
-  start = async (): Promise<void> => { }
-
-  stop = async (): Promise<void> => {
-    console.log('keypair has stopped')
-  }
+export class Keypair implements IKeypair {
+  constructor(public privateKey: string, public publicKey: string) { }
 
   public static new = async (): Promise<Keypair> => {
     const privateKey = ed.utils.randomPrivateKey()
