@@ -1,6 +1,6 @@
-import { RpcTask } from '../rpc/index.js'
-import { StateTask } from '../state/index.js'
-import { ITask, TaskManager } from '../task/index.js'
+import { RpcTask } from '../rpc'
+import { StateTask } from '../state'
+import { ITask, TaskManager } from '../task'
 
 export class WasmTask implements ITask {
   manager: TaskManager

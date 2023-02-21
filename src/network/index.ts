@@ -2,13 +2,13 @@ import { createLibp2p, Libp2p } from 'libp2p'
 import { tcp } from '@libp2p/tcp'
 import { noise } from '@chainsafe/libp2p-noise'
 import { mplex } from '@libp2p/mplex'
-import { ITask, TaskManager } from '../task/index.js'
+import { ITask, TaskManager } from '../task'
 import { peerIdFromKeys } from '@libp2p/peer-id'
 import { multiaddr } from '@multiformats/multiaddr'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { PeerId } from '@libp2p/interface-peer-id'
-import { TxPoolTask } from '../txpool/index.js'
-import { SignedTransaction } from '../types/index.js'
+import { TxPoolTask } from '../txpool'
+import { SignedTransaction } from '../types'
 
 export class NetworkTask implements ITask {
   node: Libp2p

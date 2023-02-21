@@ -1,5 +1,5 @@
 import * as ed from '@noble/ed25519'
-import { ITask, TaskManager } from '../task/index.js'
+import { ITask, TaskManager } from '../task'
 import crypto from 'crypto'
 
 export interface Keypair {

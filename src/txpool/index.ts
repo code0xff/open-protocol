@@ -1,5 +1,5 @@
-import { ITask, TaskManager } from '../task/index.js'
-import { SignedTransaction } from '../types/index.js'
+import { ITask, TaskManager } from '../task'
+import { SignedTransaction } from '../types'
 
 export class TxPoolTask implements ITask {
   manager: TaskManager

@@ -1,8 +1,8 @@
-import { RpcTask } from '../rpc/index.js'
-import { ITask, TaskManager } from '../task/index.js'
-import { TxPoolTask } from '../txpool/index.js'
-import { NetworkTask } from '../network/index.js'
-import { SignedTransaction } from '../types/index.js'
+import { RpcTask } from '../rpc'
+import { ITask, TaskManager } from '../task'
+import { TxPoolTask } from '../txpool'
+import { NetworkTask } from '../network'
+import { SignedTransaction } from '../types'
 
 export class ApiTask implements ITask {
   manager: TaskManager

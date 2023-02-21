@@ -1,6 +1,6 @@
-import { encode, decode, encodeHexString, encodeNumber } from '../codec/index.js'
+import { encode, decode, encodeHexString, encodeNumber } from '../codec'
 import crypto from 'crypto'
-import { KeypairTask } from '../keypair/index.js'
+import { KeypairTask } from '../keypair'
 
 interface IUnsignedTransaction {
   from: string

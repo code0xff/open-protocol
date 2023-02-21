@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import { JSONRPCServer, JSONRPCRequest, SimpleJSONRPCMethod } from 'json-rpc-2.0'
-import { ITask, TaskManager } from '../task/index.js'
+import { ITask, TaskManager } from '../task'
 
 export class RpcTask implements ITask {
   fastify: FastifyInstance
