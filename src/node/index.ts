@@ -79,16 +79,16 @@ program.command('wasm')
   })
 
 program.command('encode')
-.requiredOption('-t, --transaction <transaction>', 'encode transaction')
-.action(async (options) => {
-  try {
-    const tx = UnsignedTransaction.fromJson(options.transaction)
-    const transaction = { hash: tx.toHash().toString('hex'), data: tx.toBuffer().toString('hex') }
-    console.log(transaction)
-    fs.writeFileSync(`transaction-${new Date().getTime()}.txt`, JSON.stringify(transaction, null, '\t'))
-  } catch (e: any) {
-    console.error(e.message)
-  }
-})
+  .requiredOption('-t, --transaction <transaction>', 'encode transaction')
+  .action(async (options) => {
+    try {
+      const tx = UnsignedTransaction.fromJson(options.transaction)
+      const transaction = { hash: tx.toHash().toString('hex'), data: tx.toBuffer().toString('hex') }
+      console.log(transaction)
+      fs.writeFileSync(`transaction-${new Date().getTime()}.txt`, JSON.stringify(transaction, null, '\t'))
+    } catch (e: any) {
+      console.error(e.message)
+    }
+  })
 
 program.parse(process.argv)
