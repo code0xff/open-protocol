@@ -12,6 +12,7 @@ import { TxPoolTask } from '../txpool'
 import { ApiTask } from '../api'
 import { ConsensusTask } from '../consensus'
 import { UnsignedTransaction } from '../types'
+import { logger } from '../logger'
 
 env.config()
 
@@ -20,7 +21,7 @@ program.command('wallet')
   .action(async () => {
     const { privateKey, publicKey } = await Keypair.new()
     const wallet = { privateKey, publicKey }
-    console.log(wallet)
+    logger.info(wallet)
     fs.writeFileSync(`wallet-${new Date().getTime()}.json`, JSON.stringify(wallet, null, '\t'))
   })
 
@@ -34,10 +35,10 @@ program.command('sign')
       const privateKey = Buffer.from(wallet.privateKey, 'hex')
       const mesasge = Buffer.from(options.message, 'hex')
       const signature = (await Keypair.sign(privateKey, mesasge)).toString('hex')
-      console.log(signature)
+      logger.info(signature)
       fs.writeFileSync(`signature-${new Date().getTime()}.txt`, signature)
     } else {
-      console.error('invalid wallet format!')
+      logger.error('invalid wallet format!')
     }
   })
 
@@ -47,7 +48,7 @@ program.command('peerkey')
     const privateKey = Buffer.from(peerId.privateKey).toString('hex')
     const publicKey = Buffer.from(peerId.publicKey).toString('hex')
     const keypair = { privateKey, publicKey, peerId: peerId.toString() }
-    console.log(keypair)
+    logger.info(keypair)
     fs.writeFileSync(`peerkey-${new Date().getTime()}.json`, JSON.stringify(keypair, null, '\t'))
   })
 
@@ -84,10 +85,10 @@ program.command('encode')
     try {
       const tx = UnsignedTransaction.fromJson(options.transaction)
       const transaction = { hash: tx.toHash().toString('hex'), data: tx.toBuffer().toString('hex') }
-      console.log(transaction)
+      logger.info(transaction)
       fs.writeFileSync(`transaction-${new Date().getTime()}.txt`, JSON.stringify(transaction, null, '\t'))
     } catch (e: any) {
-      console.error(e.message)
+      logger.error(e.message)
     }
   })
 

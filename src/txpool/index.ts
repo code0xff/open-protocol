@@ -14,9 +14,7 @@ export class TxPoolTask implements ITask {
 
   start = async (): Promise<void> => { }
 
-  stop = async (): Promise<void> => { 
-    console.log('txpool has stopped')
-  }
+  stop = async (): Promise<void> => { }
 
   push = (tx: SignedTransaction): boolean => {
     if (!this.ready.has(tx.toHash())) {

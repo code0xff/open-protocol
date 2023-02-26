@@ -23,9 +23,7 @@ export class WasmTask implements ITask {
     })
   }
 
-  stop = async (): Promise<void> => {
-    console.log('wasm has stopped')
-  }
+  stop = async (): Promise<void> => { }
 
   create = async (address: string, code: string) => {
     const db = this.manager.get<StateTask>('state')

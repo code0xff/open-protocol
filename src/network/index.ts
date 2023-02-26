@@ -9,6 +9,7 @@ import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { PeerId } from '@libp2p/interface-peer-id'
 import { TxPoolTask } from '../txpool'
 import { SignedTransaction } from '../types'
+import { logger } from '../logger'
 
 export class NetworkTask implements ITask {
   node: Libp2p
@@ -27,7 +28,7 @@ export class NetworkTask implements ITask {
     this.peerId = await peerIdFromKeys(publicKey, privateKey)
 
     const endpoint = process.env.LIBP2P_ENDPOINT
-    console.log(`endpoint: ${endpoint}`)
+    logger.info(`endpoint: ${endpoint}`)
 
     this.node = await createLibp2p({
       pubsub: gossipsub(),
@@ -43,19 +44,18 @@ export class NetworkTask implements ITask {
 
   start = async (): Promise<void> => {
     await this.node.start()
-    console.log('libp2p has started')
 
     this.node.getMultiaddrs().forEach((ma) => {
-      console.log(ma.toString())
+      logger.info(ma.toString())
     })
 
     const peers = process.env.PEER_ENDPOINTS ? process.env.PEER_ENDPOINTS.split(',') : []
     for (const peer of peers) {
       try {
         await this.node.dial(multiaddr(peer))
-        console.log(`remote peer: ${peer}`)
+        logger.info(`remote peer: ${peer}`)
       } catch (e: any) {
-        console.error(e)
+        logger.error(e)
       }
     }
 
@@ -70,22 +70,21 @@ export class NetworkTask implements ITask {
           console.debug(`already added tx! hash=${tx.toHash().toString('hex')}`)
         }
       } else {
-        console.error('unknown type!')
+        logger.error('unknown type!')
       }
     })
 
     this.node.connectionManager.addEventListener('peer:connect', (evt) => {
-      console.log(`connected to ${evt.detail.remotePeer.toString()}`)
+      logger.info(`connected to ${evt.detail.remotePeer.toString()}`)
     })
 
     this.node.connectionManager.addEventListener('peer:disconnect', (evt) => {
-      console.log(`disconnected to ${evt.detail.remotePeer.toString()}`)
+      logger.info(`disconnected to ${evt.detail.remotePeer.toString()}`)
     })
   }
 
   stop = async (): Promise<void> => {
     await this.node.stop()
-    console.log('libp2p has stopped')
   }
 
   public publish = async (type: Buffer, tx: Buffer): Promise<void> => {

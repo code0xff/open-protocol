@@ -54,6 +54,8 @@
     "json-rpc-2.0": "^1.4.2",
     "level": "^8.0.0",
     "libp2p": "^0.41.0",
-    "memory-level": "^1.0.0"
+    "memory-level": "^1.0.0",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
   }
 }

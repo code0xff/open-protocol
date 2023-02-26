@@ -1,5 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import { JSONRPCServer, JSONRPCRequest, SimpleJSONRPCMethod } from 'json-rpc-2.0'
+import { logger } from '../logger'
 import { ITask, TaskManager } from '../task'
 
 export class RpcTask implements ITask {
@@ -35,12 +36,11 @@ export class RpcTask implements ITask {
   start = async (): Promise<void> => {
     const port = process.env.RPC_PORT ? parseInt(process.env.RPC_PORT) : 9999
     await this.fastify.listen({ port })
-    console.log(`server listen on ${port}!`)
+    logger.info(`server listen on ${port}!`)
   }
 
   stop = async (): Promise<void> => {
     await this.fastify.close()
-    console.log('rpc has closed')
   }
 
   addMethod = (name: string, method: SimpleJSONRPCMethod) => {

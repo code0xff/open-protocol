@@ -9,9 +9,7 @@ export class ConsensusTask implements ITask {
 
   start = async (): Promise<void> => { }
 
-  stop = async (): Promise<void> => {
-    console.log('consensus has stopped')
-  }
+  stop = async (): Promise<void> => { }
 
   isMyTurn = async (): Promise<boolean> => {
     return true

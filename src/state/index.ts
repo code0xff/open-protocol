@@ -16,9 +16,7 @@ export class StateTask implements ITask {
 
   start = async (): Promise<void> => { }
 
-  stop = async (): Promise<void> => { 
-    console.log('db has stopped')
-  }
+  stop = async (): Promise<void> => { }
 
   put = async (key: Buffer, value: Buffer): Promise<void> => {
     await this.trie.put(key, value)

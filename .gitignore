@@ -2,9 +2,10 @@
 dist
 node_modules
 db
-contract*
-peerkey*
-wallet*
+contract-*
+peerkey-*
+wallet-*
 package-lock.json
-signature*
-transaction*
+signature-*
+transaction-*
+logs

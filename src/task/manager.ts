@@ -1,3 +1,4 @@
+import { logger } from '../logger'
 import { ITask } from './task.js'
 
 export class TaskManager {
@@ -16,11 +17,17 @@ export class TaskManager {
   }
 
   start = async () => {
-    await Promise.all([...this.tasks].map(([_, task]) => task.start()))
+    await Promise.all([...this.tasks].map(([_, task]) => {
+      task.start()
+      logger.info(`${task.name()} has started.`)
+    }))
   }
 
   stop = async () => {
-    await Promise.all([...this.tasks].map(([_, task]) => task.stop()))
+    await Promise.all([...this.tasks].map(([_, task]) => {
+      task.stop()
+      logger.info(`${task.name()} has stopped.`)
+    }))
     process.exit(0)
   }
 
