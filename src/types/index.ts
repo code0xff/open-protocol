@@ -113,3 +113,35 @@ export class SignedTransaction implements ISignedTransaction {
     return await Keypair.verify(Buffer.from(this.signature, 'hex'), hash, Buffer.from(this.from, 'hex'))
   }
 }
+
+interface IAccount {
+  id: string
+  balance: string
+  nonce: number
+  code: string
+}
+
+export class Account implements IAccount{
+  constructor(
+    public id: string,
+    public balance: string,
+    public nonce: number,
+    public code: string,
+  ) { }
+
+  public static new = (publicKey: string): Account => {
+    if (publicKey !== '64') {
+      throw new Error('Invalid Id.')
+    }
+    return new Account(publicKey, '0', 0, '0')
+  }
+  
+  public toBuffer = (): Buffer => {
+    const buffers = new Array<Buffer>()
+    buffers[0] = encodeHexString(this.id)
+    buffers[1] = encodeHexString(this.balance)
+    buffers[2] = encodeNumber(this.nonce)
+    buffers[3] = encodeHexString(this.code)
+    return encode(buffers)
+  }
+}

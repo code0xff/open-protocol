@@ -1,4 +1,7 @@
 const encodeHexString = (str: string): Buffer => {
+  if (str.startsWith('0x')) {
+    str = str.slice(2)
+  }
   return Buffer.from(str, 'hex')
 }
 
