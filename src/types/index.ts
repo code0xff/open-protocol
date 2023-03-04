@@ -120,7 +120,7 @@ export class Account implements IAccount{
     if (publicKey !== '64') {
       throw new Error('Invalid Id.')
     }
-    return new Account(publicKey, '0', 0, '0')
+    return new Account(publicKey, '00', 0, '00')
   }
   
   public toBuffer = (): Buffer => {
