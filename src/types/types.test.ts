@@ -1,5 +1,4 @@
 import { Account, UnsignedTransaction } from '.'
-import { decode } from '../codec'
 
 test('transaction encode test', () => {
   const txJsonStr = "{\"from\": \"7e9cd855ddb203964649da096ebba0515070db91a0bfcba96e4f692ad582f2dc\",\"to\": \"48cddaa3e83ba437487defec48e92f5023cffd67f2c7e506dace3977c662cc56\",\"value\": \"ff\",\"nonce\": 1,\"input\": \"00\"}"
