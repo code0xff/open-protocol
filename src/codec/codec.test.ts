@@ -3,18 +3,21 @@ import { decode, encode, encodeHexString, encodeNumber } from '.'
 const from = '01'
 const to = '02'
 const value = '01'
-const nonce = '02'
+const nonce = 2
 const input = '00'
 const signature = '01'
-const tx = [from, to, value, nonce, input, signature]
 
 test('encode and decode test', () => {
-  const rawTx = tx.map(e => Buffer.from(e, 'hex'))
-  const encoded = encode(rawTx)
-  expect(encoded.toString('hex')).toBe('010000000101000000020100000001010000000201000000000100000001') 
+  const encoded = encode([from, to, value, nonce, input, signature])
+  expect(encoded.toString('hex')).toBe('010000000101000000020100000001040000000200000001000000000100000001')
 
   const decoded = decode(encoded)
-  expect(Buffer.concat(decoded).toString('hex')).toBe(Buffer.concat(rawTx).toString('hex'))
+  expect(decoded[0].toString('hex')).toBe(from)
+  expect(decoded[1].toString('hex')).toBe(to)
+  expect(decoded[2].toString('hex')).toBe(value)
+  expect(decoded[3].readUint32LE()).toBe(nonce)
+  expect(decoded[4].toString('hex')).toBe(input)
+  expect(decoded[5].toString('hex')).toBe(signature)
 })
 
 test('encodeHexString test', () => {

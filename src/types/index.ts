@@ -1,4 +1,4 @@
-import { encode, decode, encodeHexString, encodeNumber } from '../codec'
+import { encode, decode } from '../codec'
 import crypto from 'crypto'
 import { Keypair } from '../keypair'
 
@@ -39,13 +39,7 @@ export class UnsignedTransaction implements IUnsignedTransaction {
   }
 
   public toBuffer = (): Buffer => {
-    const buffers = new Array<Buffer>()
-    buffers[0] = encodeHexString(this.from)
-    buffers[1] = encodeHexString(this.to)
-    buffers[2] = encodeHexString(this.value)
-    buffers[3] = encodeNumber(this.nonce)
-    buffers[4] = encodeHexString(this.input)
-    return encode(buffers)
+    return encode([this.from, this.to, this.value, this.nonce, this.input])
   }
 
   public toHash = (): Buffer => {
@@ -94,14 +88,7 @@ export class SignedTransaction implements ISignedTransaction {
   }
 
   public toBuffer = (): Buffer => {
-    const buffers = new Array<Buffer>()
-    buffers[0] = encodeHexString(this.from)
-    buffers[1] = encodeHexString(this.to)
-    buffers[2] = encodeHexString(this.value)
-    buffers[3] = encodeNumber(this.nonce)
-    buffers[4] = encodeHexString(this.input)
-    buffers[5] = encodeHexString(this.signature)
-    return encode(buffers)
+    return encode([this.from, this.to, this.value, this.nonce, this.input, this.signature])
   }
 
   public toHash = (): Buffer => {
@@ -137,11 +124,6 @@ export class Account implements IAccount{
   }
   
   public toBuffer = (): Buffer => {
-    const buffers = new Array<Buffer>()
-    buffers[0] = encodeHexString(this.id)
-    buffers[1] = encodeHexString(this.balance)
-    buffers[2] = encodeNumber(this.nonce)
-    buffers[3] = encodeHexString(this.code)
-    return encode(buffers)
+    return encode([this.id, this.balance, this.nonce, this.code])
   }
 }
