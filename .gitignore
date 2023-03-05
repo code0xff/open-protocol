@@ -9,3 +9,4 @@ package-lock.json
 signature-*
 transaction-*
 logs
+.env
