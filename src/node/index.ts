@@ -17,12 +17,12 @@ import { logger } from '../logger'
 env.config()
 
 const program = new Command()
-program.command('wallet')
+program.command('key')
   .action(async () => {
     const { privateKey, publicKey } = await Keypair.new()
     const wallet = { privateKey, publicKey }
     logger.info(wallet)
-    fs.writeFileSync(`wallet-${new Date().getTime()}.json`, JSON.stringify(wallet, null, '\t'))
+    fs.writeFileSync(`key-${new Date().getTime()}.json`, JSON.stringify(wallet, null, '\t'))
   })
 
 program.command('sign')

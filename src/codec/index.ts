@@ -20,7 +20,7 @@ const bufferLength = (buffer: Buffer): Uint8Array => {
   return new Uint8Array(u32a.buffer)
 }
 
-const encode = (values: Array<any>): Buffer => {
+const encode = (values: Array<string | number>): Buffer => {
   const buffers = new Array<Buffer>()
   for (const value of values) {
     let buffer: Buffer;
@@ -29,7 +29,7 @@ const encode = (values: Array<any>): Buffer => {
     } else if (typeof value === 'number') {
       buffer = encodeNumber(value)
     } else {
-      throw new Error('Not support type.')
+      throw new Error('Not supported type.')
     }
     buffers.push(Buffer.concat([bufferLength(buffer), buffer]))
   }
